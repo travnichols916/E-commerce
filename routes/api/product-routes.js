@@ -8,12 +8,12 @@ router.get('/', (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
   Product.findAll({
-    include: {
-      model: Category,
-      attributes: ['id', 'category_name'],
-      model: Tag,
-      attributes: ['id', 'tag_name']
-    }
+    include: [
+  Category, 
+  {
+    model: Tag, through: ProductTag
+  }
+]
   })
   .then(dbProductData => res.json(dbProductData))
   .catch(err => {
@@ -30,12 +30,15 @@ router.get('/:id', (req, res) => {
     where: {
     id: req.params.id
   },
-    include: {
-      model: Category,
-      attributes: ['id', 'category_name'],
-      model: Tag,
-      attributes: ['id', 'tag_name']
-    }
+    include: [
+      {
+        model: Category,
+      attributes: ['id', 'category_name']
+    },
+      {model: Tag,
+      through: ProductTag,
+      attributes: ['id', 'tag_name'],
+    }],
 }).then(emp => {
   console.log(emp)
 res.json(emp)
@@ -88,7 +91,8 @@ router.put('/:id', (req, res) => {
       id: req.params.id,
     },
   })
-    .then((Product) => {
+    .then((product) => {
+      console.log(product)
       // find all associated tags from ProductTag
       return ProductTag.findAll({ where: { product_id: req.params.id } });
     })

@@ -30,9 +30,9 @@ router.get('/:id', (req, res) => {
         model: Product,
         attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
       }
-  }).then(emp => {
-    console.log(emp)
-res.json(emp)
+  }).then(err => {
+    console.log(err)
+res.json(err)
     })
 });
 
